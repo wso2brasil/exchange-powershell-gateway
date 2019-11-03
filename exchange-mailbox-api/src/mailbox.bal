@@ -56,6 +56,39 @@ service mailbox on new http:Listener(config:getAsInt("http.port", 19090)) {
         }
 
     }
+
+    @http:ResourceConfig {
+        methods: ["DELETE"],
+        path: "/mailbox"
+    }    
+    resource function deleteMailbox(http:Caller caller, http:Request req) {
+        // Get payload. It must be json and match Mailbox record
+        var payload = req.getJsonPayload();
+
+        // Certify it is a Mailbox record by testing the identity attribute
+        if( payload is json ) {
+            Mailbox|error _mailbox = Mailbox.constructFrom(payload);
+            if(_mailbox is Mailbox ) {
+                if( _mailbox.identity.trim() == "" ) {
+                    errorResponse( caller, HTTP_BAD_REQUEST, "Bad Request. Identity is an empty string");
+                    return;
+                }
+                log:printDebug("disable mailbox for identity: " + _mailbox.identity);
+                string _uuid = disableMailbox( payload );
+                string message = "identity accepted for disabling mailbox (" + _mailbox.identity + ")";
+                successResponse( caller, HTTP_ACCEPTED, _uuid, <@untainted> message );
+                return;
+            } else {
+                errorResponse( caller, HTTP_BAD_REQUEST, "Bad Request. Identity attribute is missing");
+                return;
+            }
+        } else {
+            errorResponse( caller, HTTP_BAD_REQUEST, "Bad Request. Not a valid json.");
+            return;
+        }
+
+    }
+
 }
 
 function closeWc(io:WritableCharacterChannel wc) {
@@ -95,6 +128,28 @@ function enableMailbox( json mailbox ) returns string {
     // TODO Verify if identity exists. This needs a diferent API that is not yet developed.
 
     log:printDebug( "Create a json file for the PowerShell Script to enable mailbox later on a schedule task" );
+    var _wbc = io:openWritableFile( path );
+
+    log:printDebug( "verify if the file has been opened successfully " );
+    if( _wbc is io:WritableByteChannel) {
+        io:WritableCharacterChannel wch = new(_wbc, "UTF8");
+        var _res = wch.writeJson( mailbox );
+        closeWc(wch);
+    }
+
+    return _uuid;
+}
+
+function enableMailbox( json mailbox ) returns string {
+    // Get path to store the new request
+    string _path = config:getAsString("path.disable.in");
+    log:printDebug( "path disable.in " + _path );
+    string _uuid = system:uuid();
+    string path = _path + "/" + _uuid + ".json";
+
+    // TODO Verify if identity exists. This needs a diferent API that is not yet developed.
+
+    log:printDebug( "Create a json file for the PowerShell Script to disable mailbox later on a schedule task" );
     var _wbc = io:openWritableFile( path );
 
     log:printDebug( "verify if the file has been opened successfully " );
