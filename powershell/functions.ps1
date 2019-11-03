@@ -4,7 +4,7 @@ function loadConfigVariables {
     return $_config
 }
 
-function createOutFolders {    
+function createFolders {    
     <# create folders to move files processed if they don't exist #>
     if ( -not (Test-Path -Path $global:config.path_enable_out -PathType Container) ) {
         New-Item -ItemType "directory" -Path $global:config.path_enable_out
@@ -23,6 +23,13 @@ function createOutFolders {
 function loadFiles {
     Write-Log "Retrieving requests"
     $path = $global:config.path_enable_in
+    $files = @(Get-ChildItem -Path $path)
+    return $files
+}
+
+function loadMailboxesToDisable {
+    Write-Log "Retrieving requests to disable mailboxes"
+    $path = $global:config.path_disable_in
     $files = @(Get-ChildItem -Path $path)
     return $files
 }
@@ -63,6 +70,29 @@ function enableMailbox( $file ) {
         Write-Log "json.identity is null or empty"
     }
     Move-Item -Path $file -Destination $global:config.path_enable_out
+}
+
+function disableMailbox( $file ) {
+    $json = Get-Content $file | Out-String | ConvertFrom-Json
+    Write-Log $file
+
+    if (-not ([string]::IsNullOrEmpty($json.identity))) {
+        $identity = Get-Mailbox $json.identity 
+        #verify if identity exists    
+        $alias = write-output ($identity | Select -ExpandProperty "Alias")
+        if (-not ([string]::IsNullOrEmpty($alias))) {
+            $msg = "Disabling mailbox for " + $json.identity
+            Write-Log $msg 
+            $disable = Disable-Mailbox $json.identity -Confirm:$false
+            Write-Log $disable 
+        } else {
+            $msg = $alias + " doesn't has a mailbox enabled"
+            Write-Log $msg
+        }
+    } else {
+        Write-Log "json.identity is null or empty"
+    }
+    Move-Item -Path $file -Destination $global:config.path_disable_out
 }
 
 

@@ -140,7 +140,7 @@ function enableMailbox( json mailbox ) returns string {
     return _uuid;
 }
 
-function enableMailbox( json mailbox ) returns string {
+function disableMailbox( json mailbox ) returns string {
     // Get path to store the new request
     string _path = config:getAsString("path.disable.in");
     log:printDebug( "path disable.in " + _path );

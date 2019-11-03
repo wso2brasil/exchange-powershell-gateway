@@ -5,11 +5,11 @@ $global:config = loadConfigVariables
 createFolders
 
 $global:timestamp = Get-Date -Format 'yyyy-MM-dd_hh-mm-ss'
-$global:logFile = $global:config.path_logs + "enable-mailboxes-" + $global:timestamp + ".log"
+$global:logFile = $global:config.path_logs + "disable-mailboxes-" + $global:timestamp + ".log"
 
-$files = loadFiles
+$files = loadMailboxesToDisable
 if ([string]::IsNullOrEmpty($files)) {
-    Write-Log "No mailboxes to enable"
+    Write-Log "No mailboxes to disable"
     return;
 }
 
@@ -23,7 +23,7 @@ validatePSSession
 
 Write-Log "$($files.count) files to process"
 foreach ($element in $files) {
-    $filePath = $global:config.path_enable_in + "\" + $element
-    enableMailbox $filePath
+    $filePath = $global:config.path_disable_in + "\" + $element
+    disableMailbox $filePath
 }
 
