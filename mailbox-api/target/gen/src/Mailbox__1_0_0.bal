@@ -101,7 +101,7 @@ apiSecureListener {
         }
     }
     @gateway:RateLimit{policy : ""}
-    resource function post_87976dd3_ffda_4350_bf98_199273822543 (http:Caller outboundEp, http:Request req) {
+    resource function post_50c58192_5dc1_49f0_8421_4064b455df63 (http:Caller outboundEp, http:Request req) {
         handleExpectHeaderForMailbox__1_0_0(outboundEp, req);
     
     
@@ -198,7 +198,7 @@ runtime:getInvocationContext().attributes["destination"] = "http://localhost:190
         }
     }
     @gateway:RateLimit{policy : ""}
-    resource function delete_ca610ad7_ee2f_4067_80ed_9a5912c054bb (http:Caller outboundEp, http:Request req) {
+    resource function delete_4bc074a4_3f19_4950_a138_d9953a7bd92e (http:Caller outboundEp, http:Request req) {
         handleExpectHeaderForMailbox__1_0_0(outboundEp, req);
     
     

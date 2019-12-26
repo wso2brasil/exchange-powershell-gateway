@@ -14,7 +14,7 @@ if ([string]::IsNullOrEmpty($files)) {
 }
 
 if($files.count -lt 1) {
-    Write-Log "No mailboxes to enable"
+    Write-Log "No mailboxes to disable"
     return;
 }
 

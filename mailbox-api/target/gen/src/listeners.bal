@@ -2,7 +2,7 @@ import wso2/gateway;
 import ballerina/http;
 import ballerina/log;
 
-
+import ballerinax/docker;
 
 
 //Throttle tier data initiation
@@ -58,6 +58,11 @@ sslVerifyClient: config:getAsString("mutualSSLConfig.sslVerifyClient")
                                                                            extensionFilter]
                                                                        };
 
+
+@docker:Config {
+    name:"mailbox-api",
+    tag:"1.0.0"
+}
 
 
 
