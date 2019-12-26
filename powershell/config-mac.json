@@ -1,0 +1,9 @@
+{ 
+    "exchange_server_uri": "https://18.231.90.94/powershell/",
+    "admin": "wso2training.com\\joaoemilio",
+    "path_enable_in":"c:\\temp\\enable\\in",
+    "path_disable_in":"c:\\temp\\disable\\in",
+    "path_enable_out":"c:\\temp\\enable\\out",
+    "path_disable_out":"/tmp/disable/out",
+    "path_logs": "/tmp/logs"
+}
