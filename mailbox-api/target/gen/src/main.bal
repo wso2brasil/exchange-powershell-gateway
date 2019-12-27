@@ -1,8 +1,8 @@
 
 public function main() {
     
-    string[] Mailbox__1_0_0_service = [ "post_40a6380c_e2d5_4b81_980f_14d154514d99",
-                                 "delete_b4618e6b_9260_454c_b5f1_d561eb9ae884"
+    string[] Mailbox__1_0_0_service = [ "post_cba68da5_8d65_4632_b0a4_a51d5e45abf1",
+                                 "delete_9fc03a50_f640_47ac_9656_f1c6423e9ab2"
                                 ];
     gateway:populateAnnotationMaps("Mailbox__1_0_0", Mailbox__1_0_0, Mailbox__1_0_0_service);
     
